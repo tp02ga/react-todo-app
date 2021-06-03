@@ -9,8 +9,6 @@ function Header() {
   );
 }
 
-function doSomething() {
-  console.log("I'm doing something");
-}
+function doSomething() {}
 
 export default Header;
