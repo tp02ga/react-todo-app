@@ -8,26 +8,22 @@ const TodoApp = () => {
 
   useEffect(() => {
     // fetch the data from DB
-    const dataFromDB = [
-      {
-        id: 1,
-        itemName: "Get the milk!",
-        isDone: false,
-      },
-      {
-        id: 2,
-        itemName: "Pick up the kids",
-        isDone: false,
-      },
-      {
-        id: 3,
-        itemName: "Go to work",
-        isDone: true,
-      },
-    ];
-    // assign data from DB to React via set method
-    setTodoItems(dataFromDB);
+    fetch("/api/todoItems")
+      .then((response) => response.json())
+      .then((data) => {
+        setTodoItems(data);
+      });
   }, []);
+
+  function handleTodoItemDataDelete(data) {
+    const todoItemsCopy = [...todoItems];
+
+    const i = todoItemsCopy.findIndex((todoItem) => todoItem.id === data.id);
+    console.log("index = ", i);
+    todoItemsCopy.splice(i, 1);
+
+    setTodoItems(todoItemsCopy);
+  }
 
   function handleTodoItemDataUpdate(data) {
     const todoItemsCopy = [...todoItems];
@@ -38,18 +34,38 @@ const TodoApp = () => {
 
     setTodoItems(todoItemsCopy);
   }
-
+  function handleTodoItemDataAdd() {
+    const data = {
+      itemName: "Get the milk",
+      isDone: false,
+    };
+    fetch("/api/todoItems", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((todoItems) => setTodoItems(todoItems));
+  }
   return (
     <div>
       <Header />
       <div style={{ marginBottom: "3rem" }}>
-        <h1>Todo List</h1>
+        <h1>
+          Todo List{" "}
+          <span onClick={handleTodoItemDataAdd} style={{ cursor: "pointer" }}>
+            +
+          </span>
+        </h1>
         {todoItems.map((data) => {
           return (
             <TodoItem
               todoItemData={data}
               key={data.id}
               emitTodoItemDataUpdate={handleTodoItemDataUpdate}
+              emitTodoItemDataDelete={handleTodoItemDataDelete}
             />
           );
         })}
