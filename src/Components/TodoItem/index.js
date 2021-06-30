@@ -14,7 +14,7 @@ const TodoItem = (props) => {
           type="checkbox"
           onChange={(e) => {
             todoItemData.isDone = !todoItemData.isDone;
-            emitTodoItemDataUpdate(todoItemData);
+            emitTodoItemDataUpdate(todoItemData, true);
           }}
           checked={todoItemData.isDone}
         />
@@ -33,7 +33,11 @@ const TodoItem = (props) => {
             placeholder="New todo item here"
             onChange={(e) => {
               todoItemData.itemName = e.target.value;
-              emitTodoItemDataUpdate(todoItemData);
+              emitTodoItemDataUpdate(todoItemData, false);
+            }}
+            onBlur={(e) => {
+              todoItemData.itemName = e.target.value;
+              emitTodoItemDataUpdate(todoItemData, true);
             }}
           />
         )}

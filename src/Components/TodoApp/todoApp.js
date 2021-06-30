@@ -16,23 +16,44 @@ const TodoApp = () => {
   }, []);
 
   function handleTodoItemDataDelete(data) {
-    const todoItemsCopy = [...todoItems];
+    fetch("/api/todoItems", {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((todoItems) => setTodoItems(todoItems));
+    // const todoItemsCopy = [...todoItems];
 
-    const i = todoItemsCopy.findIndex((todoItem) => todoItem.id === data.id);
-    console.log("index = ", i);
-    todoItemsCopy.splice(i, 1);
+    // const i = todoItemsCopy.findIndex((todoItem) => todoItem.id === data.id);
+    // console.log("index = ", i);
+    // todoItemsCopy.splice(i, 1);
 
-    setTodoItems(todoItemsCopy);
+    // setTodoItems(todoItemsCopy);
   }
 
-  function handleTodoItemDataUpdate(data) {
-    const todoItemsCopy = [...todoItems];
+  function handleTodoItemDataUpdate(data, shouldSave) {
+    if (!shouldSave) {
+      const todoItemsCopy = [...todoItems];
 
-    const i = todoItemsCopy.findIndex((todoItem) => todoItem.id === data.id);
-    console.log("index = ", i);
-    todoItemsCopy[i] = data;
+      const i = todoItemsCopy.findIndex((todoItem) => todoItem.id === data.id);
+      console.log("index = ", i);
+      todoItemsCopy[i] = data;
 
-    setTodoItems(todoItemsCopy);
+      setTodoItems(todoItemsCopy);
+    } else {
+      fetch("/api/todoItems", {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .then((todoItems) => setTodoItems(todoItems));
+    }
   }
   function handleTodoItemDataAdd() {
     const data = {
