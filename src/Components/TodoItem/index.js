@@ -1,9 +1,13 @@
 import React from "react";
+import {
+  handleTodoItemDataUpdate,
+  handleTodoItemDataDelete,
+} from "../../Services/todoItemService";
+import PropTypes from "prop-types";
 
 const TodoItem = (props) => {
   // const todoItemData = props.todoItemData;
-  const { todoItemData, emitTodoItemDataUpdate, emitTodoItemDataDelete } =
-    props;
+  const { todoItemData, todoItems, setTodoItems } = props;
 
   console.log("TodoItem updated with data,", todoItemData);
 
@@ -14,7 +18,12 @@ const TodoItem = (props) => {
           type="checkbox"
           onChange={(e) => {
             todoItemData.isDone = !todoItemData.isDone;
-            emitTodoItemDataUpdate(todoItemData, true);
+            handleTodoItemDataUpdate(
+              todoItemData,
+              todoItems,
+              setTodoItems,
+              true
+            );
           }}
           checked={todoItemData.isDone}
         />
@@ -33,17 +42,27 @@ const TodoItem = (props) => {
             placeholder="New todo item here"
             onChange={(e) => {
               todoItemData.itemName = e.target.value;
-              emitTodoItemDataUpdate(todoItemData, false);
+              handleTodoItemDataUpdate(
+                todoItemData,
+                todoItems,
+                setTodoItems,
+                false
+              );
             }}
             onBlur={(e) => {
               todoItemData.itemName = e.target.value;
-              emitTodoItemDataUpdate(todoItemData, true);
+              handleTodoItemDataUpdate(
+                todoItemData,
+                todoItems,
+                setTodoItems,
+                true
+              );
             }}
           />
         )}
         <span
           style={{ marginLeft: "1em", cursor: "pointer" }}
-          onClick={(e) => emitTodoItemDataDelete(todoItemData)}
+          onClick={(e) => handleTodoItemDataDelete(todoItemData, setTodoItems)}
         >
           ➖
         </span>
@@ -52,4 +71,9 @@ const TodoItem = (props) => {
   );
 };
 
+TodoItem.propTypes = {
+  todoItemData: PropTypes.any.isRequired,
+  todoItems: PropTypes.array.isRequired,
+  setTodoItems: PropTypes.func.isRequired,
+};
 export default TodoItem;

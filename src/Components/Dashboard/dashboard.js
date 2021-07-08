@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TodoItem from "../TodoItem";
+
 const Dashboard = () => {
   const [allActiveItems, setAllActiveItems] = useState([]);
 
@@ -19,9 +20,18 @@ const Dashboard = () => {
   return (
     <div>
       <h1>Active Todo Items</h1>
-      {allActiveItems.map((data) => {
-        return <TodoItem todoItemData={data} key={data.id} />;
-      })}
+      {allActiveItems
+        .filter((item) => !item.isDone)
+        .map((data) => {
+          return (
+            <TodoItem
+              todoItemData={data}
+              key={data.id}
+              todoItems={allActiveItems}
+              setTodoItems={setAllActiveItems}
+            />
+          );
+        })}
     </div>
   );
 };
